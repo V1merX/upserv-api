@@ -1,0 +1,99 @@
+version: "2"
+
+run:
+  timeout: 1m
+
+linters:
+  disable-all: true
+  enable:
+    - asciicheck
+    - depguard
+    - dogsled
+    - errcheck
+    - exhaustive
+    - gocognit
+    - gocyclo
+    - goheader
+    - gomodguard
+    - goprintffuncname
+    - govet
+    - ineffassign
+    - misspell
+    - nakedret
+    - nestif
+    - rowserrcheck
+    - sqlclosecheck
+    - staticcheck
+    - unconvert
+    - unused
+    - whitespace
+    - durationcheck
+    - forbidigo
+    - forcetypeassert
+    - importas
+    - nilerr
+    - predeclared
+    - thelper
+    - tparallel
+    - wastedassign
+    - promlinter
+    - bodyclose
+    - godot
+    - funlen
+    - wsl_v5
+    - gocritic
+    - prealloc
+    - nlreturn
+    - unparam
+  settings:
+    wsl_v5:
+      allow-first-in-block: true
+      allow-whole-block: false
+      branch-max-lines: 2 
+    depguard:
+      rules:
+        main:
+          list-mode: lax
+          files:
+            - "!**/*_a _file.go"
+          allow:
+            - github.com/V1merX
+          deny:
+            - pkg: "math/rand$"
+              desc: use math/rand/v2
+            - pkg: "github.com/sirupsen/logrus"
+              desc: not allowed
+            - pkg: "github.com/pkg/errors"
+              desc: Should be replaced by standard lib errors package
+
+formatters:
+  enable:
+    - gci
+    - gofmt
+    - gofumpt
+    - goimports
+    - golines
+    - swaggo
+  settings:
+    option: value
+  exclusions:
+    warn-unused: true
+    generated: strict
+    paths:
+      - ".*\\.my\\.go$"
+      - lib/bad.go
+
+
+issues:
+  exclude-rules:
+    - path: (_test\.go|tests)
+      linters:
+        - bodyclose
+        - dupl
+        - funlen
+        - goerr113
+        #- gosec
+        - noctx
+    - path: (internal/delivery/http)
+      linters:
+        - godot
