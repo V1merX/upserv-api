@@ -1,13 +1,11 @@
 package main
 
 import (
-	"log"
-
 	"github.com/V1merX/upserv-api/internal/app"
 )
 
+const configsDir = "config"
+
 func main() {
-	if err := app.Run(); err != nil {
-		log.Fatal(err)
-	}
+	app.Run(configsDir)
 }
