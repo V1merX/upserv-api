@@ -22,6 +22,9 @@ POSTGRESQL_NAME=
 JWT_SIGNING_KEY=
 
 HTTP_HOST=
+
+TELEGRAM_TOKEN=
+TELEGRAM_CHATID=:
 ```
 
 Use `make run` to build&run project, `make lint` to check code with linter.
