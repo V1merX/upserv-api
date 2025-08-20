@@ -64,8 +64,7 @@ type LimiterConfig struct {
 }
 
 type AuthConfig struct {
-	JWT          JWTConfig `mapstructure:",squash"`
-	PasswordSalt string    `envconfig:"PASSWORD_SALT" default:"fake_salt"`
+	JWT JWTConfig `mapstructure:",squash"`
 }
 
 type JWTConfig struct {
@@ -186,8 +185,6 @@ HTTP Server:
   Max Header Bytes: %d
 
 Authentication:
-  Password Salt: %s
-  JWT Signing Key: %s
   Access Token TTL: %v
   Refresh Token TTL: %v
 
@@ -209,7 +206,6 @@ Logger:
 		c.PostgreSQL.HealthCheckPeriod,
 		c.HTTP.Host, c.HTTP.Port, c.HTTP.ReadTimeout,
 		c.HTTP.WriteTimeout, c.HTTP.MaxHeaderMegabytes,
-		c.Auth.PasswordSalt, c.Auth.JWT.SigningKey,
 		c.Auth.JWT.AccessTokenTTL, c.Auth.JWT.RefreshTokenTTL,
 		c.Limiter.RPS, c.Limiter.Burst, c.Limiter.TTL,
 		c.Cache.TTL, c.Logger.Level,
