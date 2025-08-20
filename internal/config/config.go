@@ -33,6 +33,7 @@ type Config struct {
 	Limiter     LimiterConfig
 	Cache       CacheConfig
 	Logger      LoggerConfig
+	Telegram    TelegramConfig
 }
 
 type PostgreSQLConfig struct {
@@ -55,6 +56,11 @@ type HTTPConfig struct {
 	ReadTimeout        time.Duration `mapstructure:"readTimeout"`
 	WriteTimeout       time.Duration `mapstructure:"writeTimeout"`
 	MaxHeaderMegabytes int           `mapstructure:"maxHeaderBytes"`
+}
+
+type TelegramConfig struct {
+	Token  string `envconfig:"TELEGRAM_TOKEN" default:"localhost"`
+	ChatID string `envconfig:"TELEGRAM_CHATID" default:"localhost"`
 }
 
 type LimiterConfig struct {
