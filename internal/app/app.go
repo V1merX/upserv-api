@@ -4,6 +4,7 @@ import (
 	"os"
 
 	"github.com/V1merX/upserv-api/internal/config"
+	"github.com/V1merX/upserv-api/pkg/a2s"
 	log "github.com/sirupsen/logrus"
 )
 
@@ -24,4 +25,9 @@ func Run(configPath string) {
 	}
 
 	log.SetLevel(logLVL)
+
+	err = a2s.Run("95.213.255.150", 27415)
+	if err != nil {
+		log.Error(err)
+	}
 }
