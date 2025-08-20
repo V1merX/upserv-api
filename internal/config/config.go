@@ -19,6 +19,7 @@ const (
 	defaultLimiterBurst           = 20
 	defaultLimiterTTL             = 10 * time.Minute
 	defaultCacheTTL               = 60 * time.Second
+	defaultLoggerLevel            = "info"
 
 	EnvLocal = "local"
 	Prod     = "prod"
@@ -31,15 +32,21 @@ type Config struct {
 	Auth        AuthConfig
 	Limiter     LimiterConfig
 	Cache       CacheConfig
+	Logger      LoggerConfig
 }
 
 type PostgreSQLConfig struct {
-	Host     string `envconfig:"POSTGRESQL_HOST" default:"localhost"`
-	Port     int    `envconfig:"POSTGRESQL_PORT" default:"5432"`
-	User     string `envconfig:"POSTGRESQL_USER" default:"root"`
-	Password string `envconfig:"POSTGRESQL_PASSWORD" default:"fake_password"`
-	DBName   string `envconfig:"POSTGRESQL_NAME" default:"upserv"`
-	SSLMode  string `envconfig:"POSTGRESQL_SSLMODE" default:"disable"`
+	Host              string        `envconfig:"POSTGRESQL_HOST" default:"localhost"`
+	Port              int           `envconfig:"POSTGRESQL_PORT" default:"5432"`
+	User              string        `envconfig:"POSTGRESQL_USER" default:"root"`
+	Password          string        `envconfig:"POSTGRESQL_PASSWORD" default:"fake_password"`
+	DBName            string        `envconfig:"POSTGRESQL_NAME" default:"upserv"`
+	SSLMode           string        `mapstructure:"ssl_mode"`
+	MaxConnections    int           `mapstructure:"max_connections"`
+	MinConnections    int           `mapstructure:"min_connections"`
+	MaxConnLifeTime   time.Duration `mapstructure:"max_conn_life_time"`
+	MaxConnIdleTime   time.Duration `mapstructure:"max_conn_idle_time"`
+	HealthCheckPeriod time.Duration `mapstructure:"health_check_period"`
 }
 
 type HTTPConfig struct {
@@ -69,6 +76,10 @@ type JWTConfig struct {
 
 type CacheConfig struct {
 	TTL time.Duration `mapstructure:"ttl"`
+}
+
+type LoggerConfig struct {
+	Level string `mapstructure:"level"`
 }
 
 func Init(configsDir string) (*Config, error) {
@@ -143,6 +154,7 @@ func populateDefaults() {
 	viper.SetDefault("limiter.burst", defaultLimiterBurst)
 	viper.SetDefault("limiter.ttl", defaultLimiterTTL)
 	viper.SetDefault("cache.ttl", defaultCacheTTL)
+	viper.SetDefault("logger.level", defaultCacheTTL)
 }
 
 func (p *PostgreSQLConfig) ConnectionString() string {
@@ -160,6 +172,11 @@ Database:
   User: %s
   DB Name: %s
   SSL Mode: %s
+  Max Connections: %d
+  Min Connections: %d
+  Max Conn IDLE time: %v
+  Max Conn life time: %v
+  Health Check period: %v
 
 HTTP Server:
   Host: %s
@@ -181,15 +198,20 @@ Rate Limiter:
 
 Cache:
   TTL: %v
+
+Logger:
+  Level: %s
 `,
 		c.Environment,
 		c.PostgreSQL.Host, c.PostgreSQL.Port, c.PostgreSQL.User,
-		c.PostgreSQL.DBName, c.PostgreSQL.SSLMode,
+		c.PostgreSQL.DBName, c.PostgreSQL.SSLMode, c.PostgreSQL.MaxConnections,
+		c.PostgreSQL.MinConnections, c.PostgreSQL.MaxConnIdleTime, c.PostgreSQL.MaxConnLifeTime,
+		c.PostgreSQL.HealthCheckPeriod,
 		c.HTTP.Host, c.HTTP.Port, c.HTTP.ReadTimeout,
 		c.HTTP.WriteTimeout, c.HTTP.MaxHeaderMegabytes,
 		c.Auth.PasswordSalt, c.Auth.JWT.SigningKey,
 		c.Auth.JWT.AccessTokenTTL, c.Auth.JWT.RefreshTokenTTL,
 		c.Limiter.RPS, c.Limiter.Burst, c.Limiter.TTL,
-		c.Cache.TTL,
+		c.Cache.TTL, c.Logger.Level,
 	)
 }
