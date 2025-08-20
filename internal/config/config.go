@@ -139,6 +139,7 @@ func parseConfigFile(folder, env string) error {
 	}
 
 	viper.SetConfigName(env)
+
 	return viper.MergeInConfig()
 }
 

@@ -14,8 +14,10 @@ import (
 func NewConnection(ctx context.Context, log *logrus.Logger, dbConfig *config.PostgreSQLConfig) (*pgxpool.Pool, error) {
 	const op = "internal.storage.postgresql.NewConnection"
 
-	var db *pgxpool.Pool
-	var pgOnce sync.Once
+	var (
+		db     *pgxpool.Pool
+		pgOnce sync.Once
+	)
 
 	connString := strings.TrimSpace(fmt.Sprintf(
 		"user=%s password=%s dbname=%s host=%s port=%d",
@@ -31,6 +33,7 @@ func NewConnection(ctx context.Context, log *logrus.Logger, dbConfig *config.Pos
 		log.WithFields(logrus.Fields{
 			"op": op,
 		}).Error(err)
+
 		return nil, err
 	}
 
@@ -48,11 +51,13 @@ func NewConnection(ctx context.Context, log *logrus.Logger, dbConfig *config.Pos
 		log.WithFields(logrus.Fields{
 			"op": op,
 		}).Error(err)
+
 		return nil, fmt.Errorf("unable to ping database: %w", err)
 	}
 
 	log.WithFields(logrus.Fields{
 		"op": op,
 	}).Debug("successfully connected to database")
+
 	return db, nil
 }

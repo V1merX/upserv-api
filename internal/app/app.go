@@ -1,7 +1,6 @@
 package app
 
 import (
-	"fmt"
 	"os"
 
 	"github.com/V1merX/upserv-api/internal/config"
@@ -17,7 +16,6 @@ func Run(configPath string) {
 	cfg, err := config.Init(configPath)
 	if err != nil {
 		log.Fatal(err)
-		return
 	}
 
 	logLVL, err := log.ParseLevel(cfg.Logger.Level)
@@ -36,6 +34,4 @@ func Run(configPath string) {
 		"omg":    true,
 		"number": 122,
 	}).Warn("The group's number increased tremendously!")
-
-	fmt.Println(cfg.String())
 }

@@ -61,18 +61,13 @@ linters:
           deny:
             - pkg: "math/rand$"
               desc: use math/rand/v2
-            - pkg: "github.com/sirupsen/logrus"
-              desc: not allowed
             - pkg: "github.com/pkg/errors"
               desc: Should be replaced by standard lib errors package
 
 formatters:
   enable:
-    - gci
     - gofmt
-    - gofumpt
     - goimports
-    - golines
     - swaggo
   settings:
     option: value
