@@ -3,7 +3,8 @@ module github.com/V1merX/upserv-api
 go 1.24.4
 
 require (
-	github.com/golang-jwt/jwt v3.2.2+incompatible
+	github.com/golang-jwt/jwt/v5 v5.3.0
+	github.com/google/uuid v1.6.0
 	github.com/jackc/pgx/v5 v5.7.5
 	github.com/kelseyhightower/envconfig v1.4.0
 	github.com/rumblefrog/go-a2s v1.0.2
