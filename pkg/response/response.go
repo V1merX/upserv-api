@@ -7,7 +7,7 @@ type Response struct {
 	Error   bool        `json:"error"`
 }
 
-func BuildSuccessResponse(code int, message string, data interface{}) Response {
+func BuildSuccess(code int, message string, data interface{}) Response {
 	return Response{
 		Code:    code,
 		Error:   false,
@@ -16,7 +16,7 @@ func BuildSuccessResponse(code int, message string, data interface{}) Response {
 	}
 }
 
-func BuildErrorResponse(code int, errorMessage string) Response {
+func BuildError(code int, errorMessage string) Response {
 	return Response{
 		Code:    code,
 		Error:   true,
