@@ -9,7 +9,7 @@ import (
 	"github.com/google/uuid"
 )
 
-type Manager struct {
+type TokenManager struct {
 	signingKey string
 }
 
@@ -19,15 +19,15 @@ var (
 	ErrAssertSubID            = errors.New("error to assert sub_id")
 )
 
-func NewManager(signingKey string) (*Manager, error) {
+func NewManager(signingKey string) (*TokenManager, error) {
 	if signingKey == "" {
 		return nil, ErrEmptySignKey
 	}
 
-	return &Manager{signingKey: signingKey}, nil
+	return &TokenManager{signingKey: signingKey}, nil
 }
 
-func (m *Manager) NewJWT(userID int, ttl time.Duration) (string, error) {
+func (m *TokenManager) NewJWT(userID int, ttl time.Duration) (string, error) {
 	claims := jwt.MapClaims{
 		"sub_id": userID,
 		"exp":    jwt.NewNumericDate(time.Now().Add(ttl)),
@@ -38,7 +38,7 @@ func (m *Manager) NewJWT(userID int, ttl time.Duration) (string, error) {
 	return token.SignedString(m.signingKey)
 }
 
-func (m *Manager) NewRefreshToken(userID int, ttl time.Duration) (string, error) {
+func (m *TokenManager) NewRefreshToken(userID int, ttl time.Duration) (string, error) {
 	uuid := uuid.New().String()
 
 	claims := jwt.MapClaims{
@@ -57,7 +57,7 @@ func (m *Manager) NewRefreshToken(userID int, ttl time.Duration) (string, error)
 	return signedString, nil
 }
 
-func (m *Manager) Parse(accessToken string) (int, error) {
+func (m *TokenManager) Parse(accessToken string) (int, error) {
 	token, err := jwt.Parse(accessToken, func(token *jwt.Token) (i any, err error) {
 		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
 			return nil, fmt.Errorf("unexpected signing method: %v", token.Header["alg"])
